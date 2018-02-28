@@ -2,21 +2,57 @@ package com.api.MessengerAPI.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.api.MessengerAPI.Database.Database;
 import com.api.MessengerAPI.Model.Message;
 
 public class MessageService
 {
 
+	private Map<Long, Message> messages = Database.getMessages();
+
+	// to set initial list
+	public MessageService()
+	{
+		messages.put(1L, new Message(1, "Message1", "Author1"));
+		messages.put(2L, new Message(2, "Message2", "Author2"));
+	}
+
+	// to get all messages from list
 	public List<Message> getAllMessages()
 	{
-		Message m1 = new Message(1L, "Message1", "Author1");
-		Message m2 = new Message(2L, "Message2", "Author2");
+		return new ArrayList<Message>(messages.values());
+	}
 
-		List<Message> list = new ArrayList<Message>();
-		list.add(m1);
-		list.add(m2);
+	// to get single message from list
+	public Message getMessage(long messageId)
+	{
+		return messages.get(messageId);
+	}
 
-		return list;
+	// to add a message
+	public Message addMessage(Message message)
+	{
+		message.setId(messages.size() + 1);
+		messages.put(message.getId(), message);
+		return message;
+	}
+
+	// to update a message
+	public Message updateMessage(Message message)
+	{
+		if (message.getId() <= 0)
+		{
+			return null;
+		}
+		messages.put(message.getId(), message);
+		return message;
+	}
+
+	// to remove a message
+	public Message removeMessage(long id)
+	{
+		return messages.remove(id);
 	}
 }

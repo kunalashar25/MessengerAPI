@@ -2,8 +2,6 @@ package com.api.MessengerAPI.Model;
 
 import java.util.Date;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -14,6 +12,7 @@ public class Message
 	private Date	created;
 	private String	author;
 
+	//Server error is thrown if Default constructor is not created
 	public Message()
 	{
 		
