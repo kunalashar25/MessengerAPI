@@ -1,6 +1,7 @@
 package com.api.MessengerAPI.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,35 @@ public class MessageService
 	public List<Message> getAllMessages()
 	{
 		return new ArrayList<Message>(messages.values());
+	}
+
+	// to get all messages from list for a particular year
+	public List<Message> getAllMessagesForYear(int year)
+	{
+		List<Message> messageForYear = new ArrayList<Message>();
+		Calendar cal = Calendar.getInstance();
+		for (Message message : messages.values())
+		{
+			cal.setTime(message.getCreated());
+			if (cal.get(Calendar.YEAR) == year)
+			{
+				messageForYear.add(message);
+			}
+		}
+		return messageForYear;
+	}
+
+	// to get all messages from list in pages
+	public List<Message> getAllMessagesInPagination(int start, int size)
+	{
+		List<Message> messageList = new ArrayList<Message>(messages.values());
+
+		if (start + size > messageList.size())
+		{
+			return new ArrayList<Message>();
+		}
+
+		return messageList.subList(start, start + size);
 	}
 
 	// to get single message from list
