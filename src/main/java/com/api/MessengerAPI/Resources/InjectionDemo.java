@@ -2,10 +2,14 @@ package com.api.MessengerAPI.Resources;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 @Path("/injection")
 @Consumes(MediaType.TEXT_PLAIN)
@@ -14,9 +18,19 @@ public class InjectionDemo
 {
 	@GET
 	@Path("annotations")
-	public String getParamUsingAnnotation(@MatrixParam("matrixParam") String matrixParam)
+	public String getParamUsingAnnotation(@MatrixParam("matrixParam") String matrixParam,
+			@HeaderParam("headerParam") String header)
 	{
-		return "Matrix Param value: " + matrixParam;
+		return "Matrix Param value: " + matrixParam + " Header Param: "+header;
+	}
+	
+	@GET
+	@Path("context")
+	public String getParamUsingContext(@Context UriInfo uriInfo, @Context HttpHeaders headers)
+	{
+		String path = uriInfo.getAbsolutePath().toString();
+		String headerInfo = headers.getHeaderString("headerParam");
+		return "Path: "+path + " Header Info: "+headerInfo;
 	}
 }
 
