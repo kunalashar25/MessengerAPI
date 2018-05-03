@@ -19,8 +19,8 @@ import com.api.MessengerAPI.Resources.FilterBean.MessageFilterBean;
 import com.api.MessengerAPI.Service.MessageService;
 
 @Path("/messages")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
+@Consumes({MediaType.APPLICATION_JSON,MediaType.TEXT_PLAIN})
+@Produces({MediaType.APPLICATION_JSON,MediaType.TEXT_PLAIN})
 public class MessageResource
 {
 	MessageService messageService = new MessageService();
@@ -83,5 +83,19 @@ public class MessageResource
 	public Message getMessage(@PathParam("messageId") long messageId)
 	{
 		return messageService.getMessage(messageId);
+	}
+	
+	@GET
+	@Path("/{messageId}/comments1")
+	public String test()
+	{
+		return "String";
+	}
+	
+	@GET
+	@Path("/{messageId}/test")
+	public String getTest()
+	{
+		return "test";
 	}
 }
