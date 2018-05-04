@@ -85,11 +85,10 @@ public class MessageResource
 		return messageService.getMessage(messageId);
 	}
 	
-	@GET
-	@Path("/{messageId}/hello")
-	public String getTest()
-	{
-		String a = "test";		
-		return a;
+	//Sub-Resource Locators aren't supposed to have HTTP method annotations
+	@Path("/{messageId}/comments")
+	public CommentResource getCommentResource()
+	{		
+		return new CommentResource();
 	}
 }
