@@ -1,25 +1,29 @@
 package com.api.MessengerAPI.Model;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
 public class Message
 {
-	private long	id;
-	private String	message;
-	private Date	created;
-	private String	author;
+	private long				id;
+	private String				message;
+	private Date				created;
+	private String				author;
+	private Map<Long, Comment>	comments	= new HashMap<>();
 
-	//Server error is thrown if Default constructor is not created
+	// Server error is thrown if Default constructor is not created
 	public Message()
 	{
-		
+
 	}
-	
+
 	public Message(long id, String message, String author)
-	{		
+	{
 		this.id = id;
 		this.message = message;
 		this.author = author;
@@ -64,6 +68,18 @@ public class Message
 	public void setAuthor(String author)
 	{
 		this.author = author;
+	}
+
+	@XmlTransient
+	// @XmlTransient: to avoid comment data when message api is called. excluded for xml as well as json.
+	public Map<Long, Comment> getComments()
+	{
+		return comments;
+	}
+
+	public void setComments(Map<Long, Comment> comments)
+	{
+		this.comments = comments;
 	}
 
 }
