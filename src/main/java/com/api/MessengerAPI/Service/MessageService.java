@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.api.MessengerAPI.Database.Database;
+import com.api.MessengerAPI.Exception.DataNotFoundException;
 import com.api.MessengerAPI.Model.Message;
 
 public class MessageService
@@ -58,7 +59,12 @@ public class MessageService
 	// to get single message from list
 	public Message getMessage(long messageId)
 	{
-		return messages.get(messageId);
+		Message message = messages.get(messageId);
+		if(message == null)
+		{
+			throw new DataNotFoundException("No Data Found for Message with Id "+messageId);
+		}
+		return message;
 	}
 
 	// to add a message

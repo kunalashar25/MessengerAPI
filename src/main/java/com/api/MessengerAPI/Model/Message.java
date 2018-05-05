@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement
+@XmlRootElement //it is used to convert response to json
 public class Message
 {
 	private long				id;
