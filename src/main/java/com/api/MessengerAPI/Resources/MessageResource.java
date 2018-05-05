@@ -25,9 +25,9 @@ import com.api.MessengerAPI.Service.MessageService;
 
 @Path("/messages")
 @Consumes(
-{ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON })
+{ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })
 @Produces(
-{ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON })
+{ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })
 public class MessageResource
 {
 	MessageService messageService = new MessageService();
@@ -58,11 +58,10 @@ public class MessageResource
 		{
 			return messageService.getAllMessagesForYear(filterBean.getYear());
 		}
-		if (filterBean.getStart() >= 0 && filterBean.getSize() >= 0)
+		if (filterBean.getStart() > 0 && filterBean.getSize() > 0)
 		{
 			return messageService.getAllMessagesInPagination(filterBean.getStart(), filterBean.getSize());
 		}
-		System.out.println("here");
 		return messageService.getAllMessages();
 	}
 
