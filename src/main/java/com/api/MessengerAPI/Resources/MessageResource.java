@@ -103,9 +103,12 @@ public class MessageResource
 
 	@GET
 	@Path("/{messageId}")
-	public Message getMessage(@PathParam("messageId") long messageId)
+	public Message getMessage(@PathParam("messageId") long messageId, @Context UriInfo uriInfo)
 	{
-		return messageService.getMessage(messageId);
+		Message message = messageService.getMessage(messageId);
+		message.addLink(getUriForSelf(uriInfo, message), "self");
+		message.addLink(getUriForComment(uriInfo, message), "comment");
+		return message;
 	}
 
 	// Sub-Resource Locators aren't supposed to have HTTP method annotations
@@ -113,5 +116,26 @@ public class MessageResource
 	public CommentResource getCommentResource()
 	{
 		return new CommentResource();
+	}
+
+	// gets self URI for implementing HATEOS
+	private String getUriForSelf(UriInfo uriInfo, Message message)
+	{
+		String uri = uriInfo.getBaseUriBuilder()
+				.path(MessageResource.class)
+				.path(Long.toString(message.getId()))
+				.build().toString();
+		return uri;
+	}
+
+	private String getUriForComment(UriInfo uriInfo, Message message)
+	{
+		String uri = uriInfo.getBaseUriBuilder()
+				.path(MessageResource.class)
+				.path(MessageResource.class, "getCommentResource")
+				.path(CommentResource.class)
+				.resolveTemplate("messageId", message.getId())
+				.build().toString();
+		return uri;
 	}
 }

@@ -1,13 +1,15 @@
 package com.api.MessengerAPI.Model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement //it is used to convert response to json
+@XmlRootElement // it is used to convert response to json
 public class Message
 {
 	private long				id;
@@ -15,6 +17,7 @@ public class Message
 	private Date				created;
 	private String				author;
 	private Map<Long, Comment>	comments	= new HashMap<>();
+	private List<Link>			links		= new ArrayList<>();
 
 	// Server error is thrown if Default constructor is not created
 	public Message()
@@ -71,7 +74,8 @@ public class Message
 	}
 
 	@XmlTransient
-	// @XmlTransient: to avoid comment data when message api is called. excluded for xml as well as json.
+	// @XmlTransient: to avoid comment data when message api is called. excluded for
+	// xml as well as json.
 	public Map<Long, Comment> getComments()
 	{
 		return comments;
@@ -80,6 +84,24 @@ public class Message
 	public void setComments(Map<Long, Comment> comments)
 	{
 		this.comments = comments;
+	}
+
+	public List<Link> getLinks()
+	{
+		return links;
+	}
+
+	public void setLinks(List<Link> links)
+	{
+		this.links = links;
+	}
+
+	public void addLink(String uri, String ref)
+	{
+		Link link = new Link();
+		link.setLink(uri);
+		link.setRel(ref);
+		links.add(link);
 	}
 
 }
