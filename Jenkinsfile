@@ -6,14 +6,14 @@ pipeline{
 			steps{
 				sh 'mvn clean install'
 			}
-		}
-		
-		post{
-			success{
-				echo 'Archiving Artifacts'
-				archiveArtifacts artifacts: '**/*.war'
+				
+			post{
+				success{
+					echo 'Archiving Artifacts'
+					archiveArtifacts artifacts: '**/*.war'
+				}
 			}
-		}
 		
+		}
 	}
 }
