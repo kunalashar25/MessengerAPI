@@ -4,7 +4,7 @@ pipeline{
 		
 		stage ('Build'){
 			steps{
-				sh 'mvn clean install'
+				sh 'mvn clean package'
 			}
 				
 			post{
@@ -12,8 +12,7 @@ pipeline{
 					echo 'Archiving Artifacts'
 					archiveArtifacts artifacts: '**/*.war'
 				}
-			}
-		
+			}		
 		}
 	}
 }
