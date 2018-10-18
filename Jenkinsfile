@@ -1,23 +1,10 @@
 pipeline{
 	agent any
-	stages{	
-	
-		stage ('Checkout'){
-			steps{
-				dir('MessengerAPI'){
-				checkout[{
-					branches: [[name: '*/master']],
-                		extensions: [[$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false, timeout: 60]]
-				}]
-				}
-			}		
-		}
-		
+	stages{		
 		stage ('Build'){
 			steps{
-				bat 'mvn clean'
-			}
-				
+				bat 'mvn clean package'
+			}				
 			post{
 				success{
 					echo 'Archiving Artifacts'
