@@ -15,5 +15,11 @@ pipeline{
 				}
 			}		
 		}
+		stage('Deploy to Server'){
+			steps{
+				echo 'Deploying Artifacts to Server'
+				build job:deploy
+			}
+		}
 	}
 }
