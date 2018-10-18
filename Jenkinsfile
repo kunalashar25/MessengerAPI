@@ -10,7 +10,7 @@ pipeline{
 			post{
 				success{
 					echo 'Archiving Artifacts'
-					archiveArtifacts artifacts: '**/MessengerAPI.war', onlyIfSuccessful: true
+					archiveArtifacts artifacts: '**/target/MessengerAPI.war', onlyIfSuccessful: true
 				}
 			}		
 		}
