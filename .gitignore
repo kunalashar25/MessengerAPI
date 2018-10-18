@@ -1,3 +1,4 @@
 /target/MessengerAPI/*
 /target/classes/*
 /target/maven-archiver/*
+/target/
