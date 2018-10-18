@@ -3,7 +3,7 @@ pipeline{
 	stages{		
 		stage ('Build'){		
 			tools {
-				jdk 'JDK 8u101'			
+				jdk 'localJDK'		
 			}
 			steps{
 				bat 'mvn clean package'
