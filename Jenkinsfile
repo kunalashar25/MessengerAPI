@@ -1,7 +1,10 @@
 pipeline{
 	agent any
 	stages{		
-		stage ('Build'){
+		stage ('Build'){		
+			tools {
+				jdk 'JDK 8u101'			
+			}
 			steps{
 				bat 'mvn clean package'
 			}				
