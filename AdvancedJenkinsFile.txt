@@ -1,0 +1,133 @@
+pipeline {
+	agent any 
+
+	stages {
+		stage('Checkout') {
+			steps {
+                dir('$projectName1') {
+                	checkout([
+                		$class: 'GitSCM',
+                		branches: [[name: '*/master']],
+                		extensions: [[$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false, timeout: 60]],
+                		browser: [$class: 'BitbucketWeb', repoUrl: '$projectCloneUrl'],
+                		userRemoteConfigs: [[credentialsId: '50487a14-946d-4461-a0a2-55a2039bf185', url: '$projectCloneUrl.git']]
+                	])
+                }
+                dir('$projectName2') {
+                	checkout([
+                		$class: 'GitSCM',
+                		branches: [[name: '*/master']],
+                		extensions: [[$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false, timeout: 60]],
+                		browser: [$class: 'BitbucketWeb', repoUrl: '$projectCloneUrl'],
+                		userRemoteConfigs: [[credentialsId: '50487a14-946d-4461-a0a2-55a2039bf185', url: '$projectCloneUrl.git']]
+                	])
+                }
+                dir('$projectName3') {
+                	checkout([
+                		$class: 'GitSCM',
+                		branches: [[name: '*/master']],
+                		extensions: [[$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false, timeout: 60]],
+                		browser: [$class: 'BitbucketWeb', repoUrl: '$projectCloneUrl'],
+                		userRemoteConfigs: [[credentialsId: '50487a14-946d-4461-a0a2-55a2039bf185', url: '$projectCloneUrl.git']]
+                	])
+                }
+			}
+		}
+		stage('Validate') {
+			steps {
+				echo 'Only ASCII characters must be present in deployment templates'
+				sh '! (find $projectName/templates/ -type f -not -name *xml* -exec file -i {} \\; | grep -v ascii)'
+			}
+		}
+		stage('Build') { 
+			tools {
+				jdk 'JDK 8u101'
+				ant 'ANT 1.8.2'
+			}
+			steps {
+				sh 'ant -f $projectName1/build.xml buildFinal'
+				writeFile file: 'buildVersion.txt', text: """
+				build.name=${env.JOB_NAME}
+				build.number=${env.BUILD_ID}
+				build.date=${env.BUILD_TIMESTAMP}
+				"""
+				sh 'zip -g dist/build.zip buildVersion.txt'
+				
+				sh 'yes | unzip dist/build.zip builds/WEB-INF/releaseVersion.properties'
+				sh 'cat buildVersion.txt >> builds/WEB-INF/releaseVersion.properties'
+				sh 'zip -g dist/build.zip builds/WEB-INF/releaseVersion.properties'
+				
+				archiveArtifacts 'dist/build.zip,dist/*.jar'
+			}
+		}
+		stage('JUnit') {
+			tools {
+				jdk 'JDK 8u101'
+				ant 'ANT 1.8.2'
+			}
+			environment {
+			    ANT_OPTS = '-XX:PermSize=256m -XX:MaxPermSize=512m'
+			}
+			steps {
+				sh 'ant -f $projectName1/build.xml RunJUnitTestAndPublishReport'
+			}
+			post {
+			    always {
+			        junit '$projectName1/junitReport/junit-xml/*.xml'
+			        echo currentBuild.getResult()
+			    }
+			}
+		}
+		/*
+		stage('Publish') {
+		    tools {
+				jdk 'JDK 8u101'
+				maven 'Maven 3.5.0'
+			}
+		    steps {
+                configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
+                
+                	sh """mvn -s \"$MAVEN_SETTINGS\" deploy:deploy-file \\
+                		-DgroupId=$groupId \\
+                		-DartifactId=$artifactId \\
+                		-Dversion=master-SNAPSHOT \\
+                		-DgeneratePom=true \\
+                		-DuniqueVersion=false \\
+                		-Dpackaging=zip \\
+                		-DrepositoryId=snapshot-repo \\
+                		-Durl=http://192.168.1.215:8081/nexus/content/repositories/$repositoryName \\
+                		-Dfile=dist/build.zip"""
+                }
+		    }
+		}
+		*/
+		/*
+		stage('Deploy') {
+		    when {
+				expression { currentBuild.getResult() == null || currentBuild.getResult().isBetterThan(Result.UNSTABLE) }
+			}
+			steps {
+				sh 'scp dist/build.zip pranavm@192.168.1.28:$dumpPath'
+				sh 'scp dist/build.zip pranavm@192.168.1.186:$dumpPath'				
+			}
+		}
+		*/
+		/*
+		stage('JUnit-REST') {
+		    when {
+				expression { currentBuild.getResult() == null || currentBuild.getResult().isBetterThan(Result.UNSTABLE) }
+			}
+			tools {
+				jdk 'JDK 8u101'
+				ant 'ANT 1.8.2'
+			}
+			environment {
+			    ANT_OPTS = '-XX:PermSize=256m -XX:MaxPermSize=512m'
+			}
+			steps {
+				sh 'ant -f $projectName1/build.xml RunRestTestsAndPublishReport'
+			}
+		}
+		*/
+	}
+}
