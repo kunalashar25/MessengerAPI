@@ -61,9 +61,9 @@ public class MessageService
 	public Message getMessage(long messageId)
 	{
 		Message message = messages.get(messageId);
-		if(message == null)
+		if (message == null)
 		{
-			throw new DataNotFoundException("No Data Found for Message with Id "+messageId);
+			throw new DataNotFoundException("No Data Found for Message with Id " + messageId);
 		}
 		return message;
 	}
@@ -84,6 +84,7 @@ public class MessageService
 		{
 			return null;
 		}
+		message.setId(messages.get(message.getId()).getId());
 		messages.put(message.getId(), message);
 		return message;
 	}
