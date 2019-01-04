@@ -16,8 +16,10 @@ import com.api.MessengerAPI.Model.Profile;
 import com.api.MessengerAPI.Service.ProfileService;
 
 @Path("/profiles")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
+@Consumes(
+{ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })
+@Produces(
+{ MediaType.TEXT_PLAIN, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })
 public class ProfileResource
 {
 
